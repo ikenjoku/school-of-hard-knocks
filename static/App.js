@@ -35,7 +35,7 @@ var StudentFilter = function (_React$Component) {
 
 function StudentTable(props) {
     var studentRows = props.students.map(function (student) {
-        return React.createElement(StudentRow, { key: student.id, student: student });
+        return React.createElement(StudentRow, { key: student._id, student: student });
     });
     return React.createElement(
         "table",
@@ -93,7 +93,7 @@ var StudentRow = function StudentRow(props) {
         React.createElement(
             "td",
             null,
-            props.student.id
+            props.student._id
         ),
         React.createElement(
             "td",
@@ -144,7 +144,7 @@ var StudentAdd = function (_React$Component2) {
                 entryDate: new Date(),
                 name: form.name.value,
                 scoreCard: 40,
-                status: "Newbie",
+                status: "Novice",
                 favQuote: form.favQuote.value
             });
             //clears the form for the next entry
@@ -199,11 +199,17 @@ var StudentList = function (_React$Component3) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newStudent)
             }).then(function (response) {
-                return response.json();
-            }).then(function (parsedNewStudent) {
-                parsedNewStudent.entryDate = new Date(parsedNewStudent.entryDate);
-                var newStudentsList = _this4.state.students.concat(parsedNewStudent);
-                _this4.setState({ students: newStudentsList });
+                if (response.ok) {
+                    response.json().then(function (parsedNewStudent) {
+                        parsedNewStudent.entryDate = new Date(parsedNewStudent.entryDate);
+                        var newStudentsList = _this4.state.students.concat(parsedNewStudent);
+                        _this4.setState({ students: newStudentsList });
+                    });
+                } else {
+                    response.json().then(function (error) {
+                        alert("Failed to add student" + error.message);
+                    });
+                }
             }).catch(function (err) {
                 alert("Error in sending data to the server: " + err.message);
             });
@@ -219,15 +225,21 @@ var StudentList = function (_React$Component3) {
             var _this5 = this;
 
             fetch("/api/students").then(function (response) {
-                return response.json();
-            }).then(function (data) {
-                console.log("Total number of students:", data._metadata.total_count);
-                data.records.forEach(function (student) {
-                    student.entryDate = new Date(student.entryDate);
-                });
-                _this5.setState({ students: data.records });
+                if (response.ok) {
+                    response.json().then(function (data) {
+                        console.log("Total number of students:", data._metadata.total_count);
+                        data.records.forEach(function (student) {
+                            student.entryDate = new Date(student.entryDate);
+                        });
+                        _this5.setState({ students: data.records });
+                    });
+                } else {
+                    response.json().then(function (error) {
+                        alert("Failed to fetch students:", error.message);
+                    });
+                }
             }).catch(function (err) {
-                console.log(err);
+                alert("Error in fetching data from the server:", err);
             });
         }
     }, {

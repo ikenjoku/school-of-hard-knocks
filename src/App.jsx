@@ -10,7 +10,7 @@ class StudentFilter extends React.Component{
 }
 
 function StudentTable(props){
-    const studentRows = props.students.map(student => <StudentRow key={student.id} student={student} />)
+    const studentRows = props.students.map(student => <StudentRow key={student._id} student={student} />)
     return(
         <table className="bordered-table">
             <thead>
@@ -32,7 +32,7 @@ function StudentTable(props){
 
 const StudentRow = (props) => (
     <tr>
-        <td>{props.student.id}</td>
+        <td>{props.student._id}</td>
         <td>{props.student.entryDate.toDateString()}</td>
         <td>{props.student.name}</td>
         <td>{props.student.scoreCard}</td>
@@ -54,7 +54,7 @@ class StudentAdd extends React.Component{
             entryDate: new Date(),
             name: form.name.value,
             scoreCard: 40,    
-            status: "Newbie",
+            status: "Novice",
             favQuote: form.favQuote.value
         });
         //clears the form for the next entry
@@ -86,11 +86,19 @@ class StudentList extends React.Component{
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(newStudent),
-        }).then(response => response.json())
-        .then(parsedNewStudent => {
-            parsedNewStudent.entryDate = new Date(parsedNewStudent.entryDate);
-            const newStudentsList = this.state.students.concat(parsedNewStudent);
-            this.setState({students: newStudentsList});
+        }).then(response => {
+            if (response.ok){
+                response.json()
+                .then(parsedNewStudent => {
+                    parsedNewStudent.entryDate = new Date(parsedNewStudent.entryDate);
+                    const newStudentsList = this.state.students.concat(parsedNewStudent);
+                    this.setState({students: newStudentsList});
+                });
+            } else{
+                response.json().then(error => {
+                    alert("Failed to add student" + error.message);
+                });
+            }
         }).catch(err => {
             alert("Error in sending data to the server: " + err.message);
         });
@@ -99,16 +107,22 @@ class StudentList extends React.Component{
         this.loadData();
     }
     loadData(){
-        fetch("/api/students")
-        .then(response => response.json())
-        .then(data => {
-            console.log("Total number of students:", data._metadata.total_count)
-            data.records.forEach(student => {
-                student.entryDate = new Date(student.entryDate)
+        fetch("/api/students").then(response => {
+        if (response.ok){
+            response.json().then(data => {
+                console.log("Total number of students:", data._metadata.total_count)
+                data.records.forEach(student => {
+                    student.entryDate = new Date(student.entryDate)
+                });
+                this.setState({students: data.records});
             });
-            this.setState({students: data.records});
+        } else {
+            response.json().then(error => {
+                alert("Failed to fetch students:", error.message)
+            });
+        }        
         }).catch(err => {
-            console.log(err);
+            alert("Error in fetching data from the server:", err);
         });
     }
     render(){
