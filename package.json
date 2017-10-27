@@ -4,9 +4,9 @@
     "description": "Basic School Info Sys",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon -w server.js server.js",
-        "compile": "babel src --presets react,es2015 --out-dir static",
-        "watch": "babel src --presets react,es2015 --out-dir static --watch",
+        "start": "nodemon -w server server/server.js",
+        "compile": "webpack",
+        "watch": "webpack-dev-server --hot --inline",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {

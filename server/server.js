@@ -2,40 +2,10 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const MongoClient = require("mongodb").MongoClient;
+const Student = require('./student.js');
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
-
-const validStudentStatus = {
-    Novice: true,
-    Fair: true,
-    Good: true,
-    Pro: true,
-    Sensei: true,
-};
-
-const studentFieldType = {
-    entryDate: "required",
-    name: "required",
-    scoreCard: "optional",
-    status: "optional",
-    favQuote: "required"
-}
-
-function validateStudent(student) {
-    for (const field in studentFieldType) {
-        const type = studentFieldType[field];
-        if (!type) {
-            delete student[field];
-        } else if (type == 'required' && !student[field]) {
-            return `${field} is required.`;
-        }
-    }
-    if (!validStudentStatus[student.status]) {
-        return `${student.status} is not a valid status.`;
-    }
-    return null;
-}
 
 app.get('/api/students', (req, res) => {
     db.collection('students').find().toArray()
@@ -57,7 +27,7 @@ app.post("/api/students", (req, res) => {
     if (!newStudent.scoreCard) {
         newStudent.scoreCard = 40;
     }
-    const err = validateStudent(newStudent);
+    const err = Student.validateStudent(newStudent);
     if (err) {
         res.status(422).json({ message: `Invalid request: ${err}` });
         return;
