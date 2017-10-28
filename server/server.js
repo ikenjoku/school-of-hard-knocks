@@ -1,14 +1,23 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const bodyParser = require("body-parser");
-const MongoClient = require("mongodb").MongoClient;
-const Student = require('./student.js');
+import bodyParser from "body-parser";
+import { MongoClient, ObjectId } from "mongodb";
+import Student from './student.js';
+import 'babel-polyfill';
+import path from 'path';
+import SourceMapSupport from 'source-map-support';
+SourceMapSupport.install();
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
 
 app.get('/api/students', (req, res) => {
-    db.collection('students').find().toArray()
+    const filter = {};
+    if (req.query.status) filter.status = req.query.status;
+    if (req.query.scoreCard_gte) filter.scoreCard = {};
+    if (req.query.scoreCard_gte) filter.scoreCard.$gte = parseInt(req.query.scoreCard_gte, 10);
+
+    db.collection('students').find(filter).toArray()
         .then(students => {
             const metadata = { "total_count": students.length };
             res.json({ _metadata: metadata, records: students })
@@ -16,6 +25,29 @@ app.get('/api/students', (req, res) => {
             console.log(error);
             res.status(500).json({ message: `Internal Server Error: ${error}` });
         });
+});
+
+app.get('/api/students/:id', (req, res) => {
+    let studentId;
+    try {
+        studentId = new ObjectId(req.params.id);
+    } catch (error) {
+        res.status(422).json({ message: `Invalid Student ID format: ${error}` });
+        return;
+    }
+
+    db.collection('students').find({ _id: studentId }).limit(1).next()
+        .then(student => {
+            if (!student) res.status(404).json({ message: `No such student: ${studentId}` });
+            else res.json(student);
+        }).catch(error => {
+            console.log(error);
+            res.status(500).json({ message: `Internal Server Error: ${error}` })
+        });
+});
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve('static/index.html'));
 });
 
 app.post("/api/students", (req, res) => {
@@ -27,7 +59,7 @@ app.post("/api/students", (req, res) => {
     if (!newStudent.scoreCard) {
         newStudent.scoreCard = 40;
     }
-    const err = Student.validateStudent(newStudent);
+    const err = Student.validateStudent(Student.cleanupStudent(newStudent));
     if (err) {
         res.status(422).json({ message: `Invalid request: ${err}` });
         return;
@@ -36,6 +68,33 @@ app.post("/api/students", (req, res) => {
         .then(result => db.collection('students').find({ _id: result.insertedId }).limit(1).next())
         .then(newStudent => {
             res.json(newStudent);
+        }).catch(error => {
+            console.log(error);
+            res.status(500).json({ message: `Internal Server Error: ${error}` });
+        });
+});
+
+app.put('/api/students/:id', (req, res) => {
+    let studentId;
+    try {
+        studentId = new ObjectId(req.params.id);
+    } catch (error) {
+        res.status(422).json({ message: `Invalid student ID format: ${error}` });
+        return;
+    }
+    const student = req.body;
+    delete student._id;
+    const err = Student.validateStudent(student);
+    if (err) {
+        res.status(422).json({ message: `Invalid request: ${err}` });
+        return;
+    }
+    console.log(req.params);
+    console.log(req.body);
+    db.collection('students').update({ _id: studentId }, Student.convertStudent(student))
+        .then(() => db.collection('students').find({ _id: studentId }).limit(1).next())
+        .then(savedStudent => {
+            res.json(savedStudent);
         }).catch(error => {
             console.log(error);
             res.status(500).json({ message: `Internal Server Error: ${error}` });
