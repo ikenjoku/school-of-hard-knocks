@@ -1,4 +1,5 @@
 import React from 'react';
+import {Form, FormControl, Button} from 'react-bootstrap';
 
 export default class StudentAdd extends React.Component {
     constructor() {
@@ -38,12 +39,15 @@ export default class StudentAdd extends React.Component {
     render() {
         return ( 
             <div>
-                <form name = "studentAdd" onSubmit = { this.handleSubmit }>
-                    <input type = "text" name = "name" placeholder = "Name" />
-                    <input type = "text" name = "scoreCard" placeholder = "Score Card" />
-                    <input type = "text" name = "favQuote" placeholder = "Favorite Quote" />
-                    <button> Add </button> 
-                </form> 
+                <Form inline name = "studentAdd" onSubmit = { this.handleSubmit }>
+                    <FormControl name = "name" placeholder = "Name"/>
+                    {' '}
+                    <FormControl name = "scoreCard" placeholder = "Score Card"/>
+                    {' '}
+                    <FormControl name = "favQuote" placeholder = "Favorite Quote"/>
+                    {' '}
+                    <Button type="submit" bsStyle="primary">Add Student</Button>
+                </Form> 
             </div>
         );
     }

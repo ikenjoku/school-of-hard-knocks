@@ -3,38 +3,63 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOHK</title>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.min.css">
     <style>
-        table.bordered-table th,
-        td {
-            border: 1px solid silver;
-            padding: 4px;
+        .panel-title a {
+            display: block;
+            width: 100%;
+            cursor: pointer;
         }
         
-        table.bordered-table {
-            border-collapse: collapse;
+        .navbar-brand {
+            display: flex;
+            align-items: center;
         }
         
-        .header {
-            border-bottom: 1px solid silver;
-            margin-bottom: 20px;
+        .navbar-brand>img {
+            padding: 0px 0px;
+            margin-right: 10px;
         }
         
-        .footer {
-            border-top: 1px solid silver;
-            padding-top: 5px;
-            margin-top: 20px;
-            font-family: Haveltica;
-            font-size: 10px;
-            color: grey;
+        body {
+            background-color: #222;
+            color: #aaa;
         }
         
-        input.invalid {
-            border-color: red;
+        .panel-body {
+            background-color: #555;
         }
         
-        div.error {
-            color: red;
+        .navbar {
+            background-color: #e7e7e7;
+            color: #555
+        }
+        
+        h5 {
+            text-align: center;
+        }
+        
+        .panel-default>.panel-heading {
+            color: #aaa;
+            background-color: #222;
+            border-color: #ddd;
+        }
+        
+        .btn-primary {
+            color: #ddd;
+            background-color: #181818;
+            border-color: #181818;
+        }
+        
+        .btn-primary:hover {
+            background-color: #363636;
+            border-color: #181818;
+        }
+        
+        .form-inline {
+            text-align: center;
         }
     </style>
 </head>

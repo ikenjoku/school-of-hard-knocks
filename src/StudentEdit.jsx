@@ -1,6 +1,8 @@
 import React from 'react';
-import {Link} from 'react-router';
 import NumInput from './NumInput.jsx';
+import {FormGroup, FormControl, ControlLabel, ButtonToolbar, Button, Panel, Form, Col} from 'react-bootstrap';
+import {LinkContainer} from 'react-router-bootstrap';
+
 
 export default class StudentEdit extends React.Component{
     constructor(){
@@ -91,31 +93,63 @@ export default class StudentEdit extends React.Component{
         const validationMessage = Object.keys(this.state.invalidFields).length === 0 ? null : 
         (<div className="error">Please correct invalid fields before submitting.</div>);
         return (
-            <div>
-                <form onSubmit={this.onSubmit}>
-                    ID: {student._id}
-                    <br/>
-                    Entry Date: {student.entryDate ? student.entryDate.toDateString() : ''}
-                    <br/>
-                    Name: <input name="name" value={student.name} onChange={this.onChange}/>
-                    <br/>
-                    Score Card: <NumInput size={5} name="scoreCard" value={student.scoreCard} onChange={this.onChange}/>
-                    <br/>
-                    Status:<select name="status" value={student.status} onChange={this.onChange}>
-                    <option value="Novice">Novice</option>
-                    <option value="Fair">Fair</option>
-                    <option value="Good">Good</option>
-                    <option value="Pro">Pro</option>
-                    <option value="Sensei">Sensei</option>
-                </select>
-                    <br/>
-                    Favorite Quote: <input name="favQuote" value={student.favQuote} onChange={this.onChange}/>
-                    <br/>
-                    {validationMessage}
-                    <button type="submit">Submit</button>
-                    <Link to="/students">Back to Student List</Link>
-                </form>
-            </div>
+            <Panel header="Student Detail">
+                <Form horizontal onSubmit={this.onSubmit}>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={3}>ID</Col>
+                        <Col sm={9}>
+                            <FormControl.Static>{student._id}</FormControl.Static>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={3}>Entry Date</Col>
+                        <Col sm={9}>
+                            <FormControl.Static>{student.entryDate ? student.entryDate.toDateString() : ''}</FormControl.Static>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={3}>Name</Col>
+                        <Col sm={9}>
+                            <FormControl name="name" value={student.name} onChange={this.onChange} />
+                        </Col>
+                    </FormGroup>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={3}>Score Card</Col>
+                        <Col sm={9}>
+                            <FormControl componentClass={NumInput} name="scoreCard" value={student.scoreCard} onChange={this.onChange}/>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={3}>Status</Col>
+                        <Col sm={9}>
+                            <FormControl componentClass="select" name="status" value={student.status} onChange={this.onChange} >
+                                <option value="Novice">Novice</option>
+                                <option value="Fair">Fair</option>
+                                <option value="Good">Good</option>
+                                <option value="Pro">Pro</option>
+                                <option value="Sensei">Sensei</option>
+                            </FormControl>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup>
+                        <Col componentClass={ControlLabel} sm={3}>Favorite Quote</Col>
+                        <Col sm={9}>
+                            <FormControl name="favQuote" value={student.favQuote} onChange={this.onChange} />
+                        </Col>
+                    </FormGroup>
+                    <FormGroup>
+                        <Col smOffset={3} sm={6}>
+                            <ButtonToolbar>
+                                <Button bsStyle="primary" type="submit">Update</Button>
+                                <LinkContainer to="/students">
+                                    <Button bsStyle="link">Back</Button>
+                                </LinkContainer>
+                            </ButtonToolbar>
+                        </Col>
+                    </FormGroup>
+                    <FormGroup><Col smOffset={3} sm={9}>{validationMessage}</Col></FormGroup>
+                </Form>
+            </Panel>  
         );
     }
 }

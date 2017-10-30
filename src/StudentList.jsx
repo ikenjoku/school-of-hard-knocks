@@ -1,6 +1,7 @@
 import React from 'react';
 import 'whatwg-fetch';
 import {Link} from 'react-router';
+import {Button, Glyphicon, Table, Panel} from 'react-bootstrap';
 
 import StudentAdd from './StudentAdd.jsx';
 import StudentFilter from './StudentFilter.jsx';
@@ -18,7 +19,9 @@ const StudentRow = (props) => {
         <td>{props.student.scoreCard}</td>
         <td>{props.student.status}</td>
         <td>{props.student.favQuote}</td>
-        <td><button onClick={onDeleteClick}>Delete</button></td>
+        <td>
+            <Button bsSize="xsmall" onClick={onDeleteClick}><Glyphicon glyph="trash" /></Button>
+        </td>
     </tr>
 )
 };
@@ -30,7 +33,7 @@ StudentRow.propTypes = {
 function StudentTable(props){
     const studentRows = props.students.map(student => <StudentRow key={student._id} student={student} deleteStudent={props.deleteStudent}/>);
     return(
-        <table className="bordered-table">
+        <Table bordered condensed hover responsive>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -45,7 +48,7 @@ function StudentTable(props){
             <tbody>
                 {studentRows}
             </tbody>
-        </table>
+        </Table>
     );
 }
 StudentTable.prototype = {
@@ -127,10 +130,10 @@ export default class StudentList extends React.Component{
     render(){
         return(
             <div>
-                <StudentFilter setFilter={this.setFilter} initFilter={this.props.location.query}/>
-                <hr/>
+                <Panel collapsible header="Filter Students">
+                    <StudentFilter setFilter={this.setFilter} initFilter={this.props.location.query}/>
+                </Panel>
                 <StudentTable students={this.state.students} deleteStudent={this.deleteStudent}/>
-                <hr/>
                 <StudentAdd createStudent={this.createStudent}/>
             </div>
         );

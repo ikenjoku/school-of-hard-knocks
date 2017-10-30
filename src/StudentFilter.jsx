@@ -1,5 +1,6 @@
 import React from 'react';
 import {Link} from 'react-router';
+import {Col, Row, FormGroup, FormControl, ControlLabel, ButtonToolbar, Button} from 'react-bootstrap';
 
 export default class StudentFilter extends React.Component {
     constructor(props){
@@ -49,22 +50,38 @@ export default class StudentFilter extends React.Component {
     }
     render() {
         return ( 
-            <div>
-                Status:
-                <select value={this.state.status} onChange={this.onChangeStatus}>
-                    <option value="">(Any)</option>
-                    <option value="Novice">Novice</option>
-                    <option value="Fair">Fair</option>
-                    <option value="Good">Good</option>
-                    <option value="Pro">Pro</option>
-                    <option value="Sensei">Sensei</option>
-                </select>
-                &nbsp; Minimun Score:
-                <input size={5} value={this.state.scoreCard_gte} onChange={this.onChangeScoreCardGte} />
-                <button onClick={this.applyFilter}>Apply</button>
-                <button onClick={this.resetFilter} disabled={!this.state.changed}>Reset</button>
-                <button onClick={this.clearFilter}>Clear</button>
-            </div>
+            <Row>
+                <Col xs={6} sm={4} md={3} lg={3}>
+                    <FormGroup>
+                        <ControlLabel>Status</ControlLabel>
+                        <FormControl componentClass="select" value={this.state.status} onChange={this.onChangeStatus}>
+                            <option value="">(Any)</option>
+                            <option value="Novice">Novice</option>
+                            <option value="Fair">Fair</option>
+                            <option value="Good">Good</option>
+                            <option value="Pro">Pro</option>
+                            <option value="Sensei">Sensei</option>
+                        </FormControl>
+                    </FormGroup>
+                </Col>
+                <Col xs={6} sm={4} md={3} lg={3}>
+                    <FormGroup>
+                        <ControlLabel>Minimun Score</ControlLabel>
+                        <FormControl componentClass="input" value={this.state.scoreCard_gte} onChange={this.onChangeScoreCardGte}>
+                        </FormControl>
+                    </FormGroup>
+                </Col>
+                <Col xs={12} sm={4} md={3} lg={3}>
+                    <FormGroup>
+                        <ControlLabel>&nbsp;</ControlLabel>
+                        <ButtonToolbar>
+                            <Button bsStyle="primary" onClick={this.applyFilter}>Apply</Button>
+                            <Button onClick={this.resetFilter} disabled={!this.state.changed}>Reset</Button>
+                            <Button onClick={this.clearFilter}>Clear</Button>
+                        </ButtonToolbar>
+                    </FormGroup>
+                </Col>
+            </Row>
         );
     }
 }
