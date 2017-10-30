@@ -89,12 +89,29 @@ app.put('/api/students/:id', (req, res) => {
         res.status(422).json({ message: `Invalid request: ${err}` });
         return;
     }
-    console.log(req.params);
-    console.log(req.body);
+
     db.collection('students').update({ _id: studentId }, Student.convertStudent(student))
         .then(() => db.collection('students').find({ _id: studentId }).limit(1).next())
         .then(savedStudent => {
             res.json(savedStudent);
+        }).catch(error => {
+            console.log(error);
+            res.status(500).json({ message: `Internal Server Error: ${error}` });
+        });
+});
+
+app.delete('/api/students/:id', (req, res) => {
+    let studentId;
+    try {
+        studentId = new ObjectId(req.params.id);
+    } catch (error) {
+        res.status(422).json({ message: `Invalid student ID format: ${error}` });
+        return;
+    }
+    db.collection('students').deleteOne({ _id: studentId })
+        .then((deleteResult) => {
+            if (deleteResult.result.n === 1) res.json({ status: 'OK' });
+            else res.json({ status: 'Warning: object not found' });
         }).catch(error => {
             console.log(error);
             res.status(500).json({ message: `Internal Server Error: ${error}` });

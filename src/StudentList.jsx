@@ -5,8 +5,30 @@ import {Link} from 'react-router';
 import StudentAdd from './StudentAdd.jsx';
 import StudentFilter from './StudentFilter.jsx';
 
+
+const StudentRow = (props) => {
+    function onDeleteClick(){
+        props.deleteStudent(props.student._id);
+    }
+    return (
+    <tr>
+        <td><Link to={`/students/${props.student._id}`}>{props.student._id.substr(-4)}</Link></td>
+        <td>{props.student.entryDate.toDateString()}</td>
+        <td>{props.student.name}</td>
+        <td>{props.student.scoreCard}</td>
+        <td>{props.student.status}</td>
+        <td>{props.student.favQuote}</td>
+        <td><button onClick={onDeleteClick}>Delete</button></td>
+    </tr>
+)
+};
+StudentRow.propTypes = {
+    student: React.PropTypes.object.isRequired,
+    deleteStudent: React.PropTypes.func.isRequired
+}
+
 function StudentTable(props){
-    const studentRows = props.students.map(student => <StudentRow key={student._id} student={student} />)
+    const studentRows = props.students.map(student => <StudentRow key={student._id} student={student} deleteStudent={props.deleteStudent}/>);
     return(
         <table className="bordered-table">
             <thead>
@@ -17,6 +39,7 @@ function StudentTable(props){
                     <th>Score Card</th>
                     <th>Status</th>
                     <th>Favorite Quote</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -25,17 +48,10 @@ function StudentTable(props){
         </table>
     );
 }
-
-const StudentRow = (props) => (
-    <tr>
-        <td><Link to={`/students/${props.student._id}`}>{props.student._id.substr(-4)}</Link></td>
-        <td>{props.student.entryDate.toDateString()}</td>
-        <td>{props.student.name}</td>
-        <td>{props.student.scoreCard}</td>
-        <td>{props.student.status}</td>
-        <td>{props.student.favQuote}</td>
-    </tr>
-)
+StudentTable.prototype = {
+    student: React.PropTypes.object.isRequired,
+    deleteStudent: React.PropTypes.func.isRequired,
+}
 
 
 export default class StudentList extends React.Component{
@@ -44,6 +60,14 @@ export default class StudentList extends React.Component{
         this.state = {students: []}
         this.setFilter = this.setFilter.bind(this);
         this.createStudent = this.createStudent.bind(this);
+        this.deleteStudent = this.deleteStudent.bind(this);
+    }
+    deleteStudent(id){
+        fetch(`api/students/${id}`, {method: 'DELETE'})
+        .then(response => {
+            if (!response.ok) alert("failed to delete student");
+            else this.loadData();
+        });
     }
     createStudent(newStudent){
         fetch("api/students", {
@@ -105,7 +129,7 @@ export default class StudentList extends React.Component{
             <div>
                 <StudentFilter setFilter={this.setFilter} initFilter={this.props.location.query}/>
                 <hr/>
-                <StudentTable students={this.state.students}/>
+                <StudentTable students={this.state.students} deleteStudent={this.deleteStudent}/>
                 <hr/>
                 <StudentAdd createStudent={this.createStudent}/>
             </div>
