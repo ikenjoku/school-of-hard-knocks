@@ -119,7 +119,8 @@ app.delete('/api/students/:id', (req, res) => {
 });
 
 let db;
-MongoClient.connect("mongodb://localhost/sohkstudents")
+MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds035856.mlab.com:35856/sohkstudents")
+    //"mongodb://localhost/sohkstudents"
     .then(connection => {
         db = connection;
         app.listen(3200, () => console.log("App started on port 3200"));

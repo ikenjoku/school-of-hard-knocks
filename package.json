@@ -4,7 +4,7 @@
     "description": "Basic School Info Sys",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon -w dist dist/server.js",
+        "start": "nodemone -w dist dist/server.js",
         "compile-server": "babel server --presets es2015-node6 --out-dir dist --source-maps",
         "watch-server": "babel server --presets es2015-node6 --out-dir dist --source-maps --watch",
         "compile": "webpack",
