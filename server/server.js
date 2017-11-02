@@ -120,7 +120,7 @@ app.delete('/api/students/:id', (req, res) => {
 });
 
 let db;
-MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds035856.mlab.com:35856/sohkstudents")
+MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds243325.mlab.com:43325/heroku_czs775rl")
     //"mongodb://localhost/sohkstudents"
     .then(connection => {
         db = connection;
