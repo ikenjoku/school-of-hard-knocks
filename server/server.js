@@ -7,6 +7,7 @@ import 'babel-polyfill';
 import path from 'path';
 import SourceMapSupport from 'source-map-support';
 SourceMapSupport.install();
+const port = (process.env.PORT || 3200);
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
@@ -123,7 +124,7 @@ MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds035856.mlab.com:35856/so
     //"mongodb://localhost/sohkstudents"
     .then(connection => {
         db = connection;
-        app.listen(3200, () => console.log("App started on port 3200"));
+        app.listen(port, () => console.log(`App started on port ${port}`));
     }).catch(error => {
         console.log('ERROR', error);
     });

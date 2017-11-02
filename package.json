@@ -4,14 +4,9 @@
     "description": "Basic School Info Sys",
     "main": "index.js",
     "scripts": {
-        "start": "nodemon -w dist dist/server.js",
-        "compile-server": "babel server --presets es2015-node6 --out-dir dist --source-maps",
-        "watch-server": "babel server --presets es2015-node6 --out-dir dist --source-maps --watch",
+        "start": "node dist/server.js",
         "compile": "webpack",
         "watch": "webpack-dev-server --hot --inline",
-        "start-hook": "nodemon -w server server/start_hook.js",
-        "dev-all": "npm-run-all --parallel start watch watch-server ",
-        "dev-all-hook": "npm-run-all --parallel watch start-hook",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
