@@ -13,7 +13,7 @@ const NoMatch = () => <p>Page not found</p>
 const Header = () => (
     <Navbar>
         <Navbar.Header>
-            <Navbar.Brand><a href="#"><img src="./sohklogo.png" alt="logo" weign="40" height="40"/>School of Hard Knocks</a></Navbar.Brand>
+            <Navbar.Brand><a href="#"><img src="./sohklogo.png" alt="logo" height="40"/>School of Hard Knocks</a></Navbar.Brand>
         </Navbar.Header>
         <Nav>
             <LinkContainer to="/students">
