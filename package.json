@@ -4,7 +4,7 @@
     "description": "Basic School Info Sys",
     "main": "index.js",
     "scripts": {
-        "start": "node dist/server.js",
+        "start": "npm run build && node dist/server.js",
         "compile": "webpack",
         "watch": "webpack-dev-server --hot --inline",
         "test": "echo \"Error: no test specified\" && exit 1",
