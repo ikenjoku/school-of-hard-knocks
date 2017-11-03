@@ -7,10 +7,28 @@ import 'babel-polyfill';
 import path from 'path';
 import SourceMapSupport from 'source-map-support';
 SourceMapSupport.install();
-const port = process.env.PORT || 3200;
+const port = (process.env.PORT || 3200);
+const Server = require('./../src/server.js');
+app = Server.app();
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
+
+if (process.env.NODE_ENV !== 'production') {
+    const webpack = require('webpack');
+    const webpackDevMiddleware = require('webpack-dev-middleware');
+    const webpackHotMiddleware = require('webpack-hot-middleware');
+
+    const config = require('../webpack.dev.config');
+    const compiler = webpack(config);
+
+    config.entry.app.push('webpack-hot-middleware/client', 'webpack/hot/only-dev-server');
+    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+
+    const bundler = webpack(config);
+    app.use(webpackDevMiddleware(bundler, { noInfo: true }));
+    app.use(webpackHotMiddleware(bundler, { log: console.log }));
+}
 
 app.get('/api/students', (req, res) => {
     const filter = {};
@@ -120,7 +138,7 @@ app.delete('/api/students/:id', (req, res) => {
 });
 
 let db;
-MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds243325.mlab.com:43325/heroku_czs775rl")
+MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds035856.mlab.com:35856/sohkstudents")
     //"mongodb://localhost/sohkstudents"
     .then(connection => {
         db = connection;
