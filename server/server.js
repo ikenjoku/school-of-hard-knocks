@@ -7,7 +7,7 @@ import 'babel-polyfill';
 import path from 'path';
 import SourceMapSupport from 'source-map-support';
 SourceMapSupport.install();
-const port = (process.env.PORT, '0.0.0.0');
+const port = process.env.PORT || 3200;
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
