@@ -1,19 +1,16 @@
 const webpack = require('webpack');
-const path = require('path');
 
 module.exports = {
     entry: {
-        app: ['webpack-hot-middleware/client', './src/App.jsx'],
+        app: './src/App.jsx',
         vendor: ['react', 'react-dom', 'whatwg-fetch', 'react-router', 'react-bootstrap', 'react-router-bootstrap'],
     },
     output: {
-        path: path.join(__dirname, 'static'),
+        path: './static',
         filename: 'app.bundle.js'
     },
     plugins: [
-        new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js'),
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.optimize.CommonsChunkPlugin('vendor', 'vendor.bundle.js')
     ],
     module: {
         loaders: [{
@@ -23,6 +20,16 @@ module.exports = {
                 presets: ['react', 'es2015']
             }
         }, ]
+    },
+    devServer: {
+        port: 8200,
+        contentBase: 'static',
+        proxy: {
+            '/api/*': {
+                target: 'http://localhost:3200'
+            }
+        },
+        historyApiFallback: true,
     },
     devtool: 'source-map'
 };

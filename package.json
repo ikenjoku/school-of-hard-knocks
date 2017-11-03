@@ -5,10 +5,14 @@
     "main": "index.js",
     "scripts": {
         "start": "node dist/server.js",
+        "compile-server": "babel server --presets es2015-node6 --out-dir dist --source-maps",
+        "watch-server": "babel server --presets es2015-node6 --out-dir dist --source-maps --watch",
         "compile": "webpack",
         "watch": "webpack-dev-server --hot --inline",
-        "test": "echo \"Error: no test specified\" && exit 1",
-        "build": "SET NODE_ENV=production webpack --config ./webpack.prod.config.js --progress --colors"
+        "start-hook": "nodemon -w server server/start_hook.js",
+        "dev-all": "npm-run-all --parallel start watch watch-server ",
+        "dev-all-hook": "npm-run-all --parallel watch start-hook",
+        "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
         "type": "git",

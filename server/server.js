@@ -8,27 +8,10 @@ import path from 'path';
 import SourceMapSupport from 'source-map-support';
 SourceMapSupport.install();
 const port = (process.env.PORT || 3200);
-const Server = require('./../src/server.js');
-app = Server.app();
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
 
-if (process.env.NODE_ENV !== 'production') {
-    const webpack = require('webpack');
-    const webpackDevMiddleware = require('webpack-dev-middleware');
-    const webpackHotMiddleware = require('webpack-hot-middleware');
-
-    const config = require('../webpack.dev.config');
-    const compiler = webpack(config);
-
-    config.entry.app.push('webpack-hot-middleware/client', 'webpack/hot/only-dev-server');
-    config.plugins.push(new webpack.HotModuleReplacementPlugin());
-
-    const bundler = webpack(config);
-    app.use(webpackDevMiddleware(bundler, { noInfo: true }));
-    app.use(webpackHotMiddleware(bundler, { log: console.log }));
-}
 
 app.get('/api/students', (req, res) => {
     const filter = {};

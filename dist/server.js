@@ -29,6 +29,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 const app = (0, _express2.default)();
 
 _sourceMapSupport2.default.install();
+const port = process.env.PORT || 3200;
 
 app.use(_express2.default.static('static'));
 app.use(_bodyParser2.default.json());
@@ -132,11 +133,11 @@ app.delete('/api/students/:id', (req, res) => {
 });
 
 let db;
-_mongodb.MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds035856.mlab.com:35856/sohkstudents")
-//"mongodb://localhost/sohkstudents"
+_mongodb.MongoClient.connect("mongodb://alcsohk:stud14AIKEE159@ds243325.mlab.com:43325/heroku_czs775rl")
+//"mongodb://localhost/sohkstudents"  mongodb://alcsohk:stud14AIKEE159@ds035856.mlab.com:35856/sohkstudents
 .then(connection => {
     db = connection;
-    app.listen(3200, () => console.log("App started on port 3200"));
+    app.listen(port, () => console.log(`App started on port ${port}`));
 }).catch(error => {
     console.log('ERROR', error);
 });
